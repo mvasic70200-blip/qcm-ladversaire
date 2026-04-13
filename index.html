@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QCM - L'Adversaire by Emmanuel Carrère</title>
+    <script>
+        const questions = [
+            { question: "Question 1?", answers: ["A", "B", "C", "D"], correct: "A" },
+            { question: "Question 2?", answers: ["A", "B", "C", "D"], correct: "B" },
+            { question: "Question 3?", answers: ["A", "B", "C", "D"], correct: "C" },
+            { question: "Question 4?", answers: ["A", "B", "C", "D"], correct: "D" },
+            { question: "Question 5?", answers: ["A", "B", "C", "D"], correct: "A" },
+            { question: "Question 6?", answers: ["A", "B", "C", "D"], correct: "B" },
+            { question: "Question 7?", answers: ["A", "B", "C", "D"], correct: "C" },
+            { question: "Question 8?", answers: ["A", "B", "C", "D"], correct: "D" },
+            { question: "Question 9?", answers: ["A", "B", "C", "D"], correct: "A" },
+            { question: "Question 10?", answers: ["A", "B", "C", "D"], correct: "B" },
+            { question: "Question 11?", answers: ["A", "B", "C", "D"], correct: "C" },
+            { question: "Question 12?", answers: ["A", "B", "C", "D"], correct: "D" },
+            { question: "Question 13?", answers: ["A", "B", "C", "D"], correct: "A" },
+            { question: "Question 14?", answers: ["A", "B", "C", "D"], correct: "B" },
+            { question: "Question 15?", answers: ["A", "B", "C", "D"], correct: "C" },
+            { question: "Question 16?", answers: ["A", "B", "C", "D"], correct: "D" },
+            { question: "Question 17?", answers: ["A", "B", "C", "D"], correct: "A" },
+            { question: "Question 18?", answers: ["A", "B", "C", "D"], correct: "B" },
+            { question: "Question 19?", answers: ["A", "B", "C", "D"], correct: "C" },
+            { question: "Question 20?", answers: ["A", "B", "C", "D"], correct: "D" }
+        ];
+
+        let currentQuestionIndex = 0;
+        let timer;
+
+        function startQuiz() {
+            shuffleQuestions();
+            displayQuestion();
+        }
+
+        function shuffleQuestions() {
+            questions.sort(() => Math.random() - 0.5);
+        }
+
+        function displayQuestion() {
+            if (currentQuestionIndex < questions.length) {
+                const questionElement = document.getElementById("question");
+                questionElement.innerText = questions[currentQuestionIndex].question;
+                // Display answers...
+                startTimer(30);
+            } else {
+                // Form submission logic
+            }
+        }
+
+        function startTimer(duration) {
+            let timeLeft = duration;
+            timer = setInterval(function () {
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    // Move to next question...
+                    currentQuestionIndex++;
+                    displayQuestion();
+                }
+                timeLeft--;
+            }, 1000);
+        }
+
+        function submitSurvey() {
+            // Logic to submit to Google Forms
+            alert("Survey submitted!");
+        }
+    </script>
+</head>
+<body onload="startQuiz()">
+    <h1>QCM - L'Adversaire by Emmanuel Carrère</h1>
+    <form id="quizForm" onsubmit="submitSurvey(); return false;">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <label for="firstname">Firstname:</label>
+        <input type="text" id="firstname" name="firstname" required>
+        <div id="question"></div>
+        <!-- Answers will be populated dynamically -->
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
