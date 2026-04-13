@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QCM L'Adversaire - Emmanuel Carrère</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        
+        .info-section {
+            margin-bottom: 30px;
+        }
+        
+        .info-section label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: bold;
+        }
+        
+        .info-section input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        
+        .start-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .start-button:hover {
+            background-color: #764ba2;
+        }
+        
+        #quiz-section {
+            display: none;
+        }
+        
+        .question-container {
+            margin-bottom: 30px;
+        }
+        
+        .timer {
+            text-align: center;
+            font-size: 24px;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .timer.warning {
+            color: #ff6b6b;
+        }
+        
+        .question-number {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .question {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .answers {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .answer-option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .answer-option:hover {
+            border-color: #667eea;
+            background-color: #f0f4ff;
+        }
+        
+        .answer-option input[type="radio"] {
+            margin-right: 12px;
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+        }
+        
+        .answer-option label {
+            flex: 1;
+            margin: 0;
+            cursor: pointer;
+            font-weight: normal;
+        }
+        
+        .next-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+        
+        .next-button:hover {
+            background-color: #764ba2;
+        }
+        
+        .next-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        #result-section {
+            display: none;
+            text-align: center;
+        }
+        
+        .result-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .score-display {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 30px 0;
+        }
+        
+        .score-message {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .restart-button {
+            padding: 12px 30px;
+            background-color: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .restart-button:hover {
+            background-color: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Section d'accueil -->
+        <div id="welcome-section">
+            <h1>QCM : L'Adversaire</h1>
+            <p style="text-align: center; color: #666; margin-bottom: 30px;">Par Emmanuel Carrère</p>
+            
+            <div class="info-section">
+                <label for="nom">Nom :</label>
+                <input type="text" id="nom" placeholder="Entrez votre nom" required>
+                
+                <label for="prenom">Prénom :</label>
+                <input type="text" id="prenom" placeholder="Entrez votre prénom" required>
+                
+                <button class="start-button" onclick="demarrerQCM()">Commencer le QCM</button>
+            </div>
+        </div>
+        
+        <!-- Section Quiz -->
+        <div id="quiz-section">
+            <div class="timer" id="timer">30</div>
+            <div class="question-number" id="question-number">Question 1 sur 20</div>
+            <div class="question-container">
+                <div class="question" id="question"></div>
+                <div class="answers" id="answers"></div>
+            </div>
+            <button class="next-button" id="next-button" onclick="questionSuivante()" disabled>Question suivante</button>
+        </div>
+        
+        <!-- Section Résultats -->
+        <div id="result-section">
+            <div class="result-title">Merci d'avoir complété le QCM !</div>
+            <div class="score-display" id="final-score">0/20</div>
+            <div class="score-message" id="score-message">Bien joué !</div>
+            <button class="restart-button" onclick="recommencer()">Recommencer</button>
+        </div>
+    </div>
+    
+    <script>
+        const questions = [
+            {
+                question: "Qui est l'auteur de 'L'Adversaire' ?",
+                answers: ["Emmanuel Carrère", "Jean-Paul Sartre", "Albert Camus", "Michel Houellebecq"],
+                correct: 0
+            },
+            {
+                question: "En quelle année 'L'Adversaire' a-t-il été publié ?",
+                answers: ["1998", "2000", "2002", "2004"],
+                correct: 1
+            },
+            {
+                question: "Quel est le vrai nom du personnage principal du livre ?",
+                answers: ["Jean-Claude Romand", "Pierre Bernard", "Michel Denard", "Claude Romain"],
+                correct: 0
+            },
+            {
+                question: "Le personnage principal était-il réellement médecin ?",
+                answers: ["Oui, depuis 20 ans", "Non, c'était un mensonge", "Oui, mais en retraite", "Non, il était avocat"],
+                correct: 1
+            },
+            {
+                question: "Quel événement tragique est au cœur du récit ?",
+                answers: ["Un accident de voiture", "Un meurtre familial", "Un suicide", "Une trahison amoureuse"],
+                correct: 1
+            },
+            {
+                question: "Où vivait le personnage principal ?",
+                answers: ["Paris", "Lyon", "Marseille", "Bordeaux"],
+                correct: 1
+            },
+            {
+                question: "Quel genre littéraire caractérise ce livre ?",
+                answers: ["Roman policier", "Essai autobiographique", "Récit d'investigation", "Thriller psychologique"],
+                correct: 2
+            },
+            {
+                question: "Pendant combien d'années le personnage a-t-il maintenu son mensonge ?",
+                answers: ["5 ans", "10 ans", "18 ans", "25 ans"],
+                correct: 2
+            },
+            {
+                question: "Quel est le ton dominant du livre ?",
+                answers: ["Comique et léger", "Sombre et introspectif", "Romantique", "Aventurier"],
+                correct: 1
+            },
+            {
+                question: "Le livre traite principalement de quel thème ?",
+                answers: ["L'amour impossible", "La double vie et l'identité", "La rédemption", "La vengeance"],
+                correct: 1
+            },
+            {
+                question: "Comment le mensonge a-t-il finalement été découvert ?",
+                answers: ["Par une enquête policière", "Par un ami qui a cherché à vérifier", "Par sa femme", "Lors d'une inspection officielle"],
+                correct: 1
+            },
+            {
+                question: "Quel est le point de vue narratif du livre ?",
+                answers: ["Première personne", "Deuxième personne", "Troisième personne omnisciente", "Mélange de points de vue"],
+                correct: 2
+            },
+            {
+                question: "Le livre a-t-il été adapté au cinéma ?",
+                answers: ["Oui, en 2002", "Non, jamais", "Oui, en 2006", "Oui, en 1999"],
+                correct: 0
+            },
+            {
+                question: "Quel est l'objectif de Carrère en écrivant ce livre ?",
+                answers: ["Divertir", "Explorer la psychologie du mensonge", "Critiquer la médecine", "Raconter une simple histoire"],
+                correct: 1
+            },
+            {
+                question: "Pourquoi le personnage principal a-t-il menti sur son métier ?",
+                answers: ["Par amour", "Par peur de l'échec et pour l'estime", "Par nécessité financière", "Par jeu"],
+                correct: 1
+            },
+            {
+                question: "Quelle est la structure chronologique du livre ?",
+                answers: ["Linéaire du début à la fin", "Non-linéaire avec retours en arrière", "Divisée en trois actes", "Fragmentée et poétique"],
+                correct: 1
+            },
+            {
+                question: "Le livre a-t-il remporté des prix littéraires ?",
+                answers: ["Le Prix Goncourt", "Le Prix Renaudot", "Le Prix Femina", "Aucun grand prix"],
+                correct: 1
+            },
+            {
+                question: "Quel sentiment domine chez le lecteur à la fin du livre ?",
+                answers: ["La satisfaction", "La perturbation et l'intrigue", "L'ennui", "La colère"],
+                correct: 1
+            },
+            {
+                question: "Emmanuel Carrère enquête-t-il lui-même sur cette histoire ?",
+                answers: ["Non, il utilise des sources officielles", "Oui, il rencontre le personnage", "Partiellement, il mène sa propre investigation", "Il utilise uniquement le dossier judiciaire"],
+                correct: 2
+            },
+            {
+                question: "Quel est le message final du livre ?",
+                answers: ["La justice toujours triomphe", "L'exploration de la nature humaine et ses contradictions", "La rédemption est possible", "Le mensonge détruit tout"],
+                correct: 1
+            }
+        ];
+        
+        let questionsShuffled = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timer;
+        let timeLeft = 30;
+        let selectedAnswer = null;
+        let nom = '';
+        let prenom = '';
+        
+        function demarrerQCM() {
+            nom = document.getElementById('nom').value.trim();
+            prenom = document.getElementById('prenom').value.trim();
+            
+            if (!nom || !prenom) {
+                alert('Veuillez entrer votre nom et prénom');
+                return;
+            }
+            
+            questionsShuffled = [...questions].sort(() => Math.random() - 0.5);
+            currentQuestionIndex = 0;
+            score = 0;
+            selectedAnswer = null;
+            
+            document.getElementById('welcome-section').style.display = 'none';
+            document.getElementById('quiz-section').style.display = 'block';
+            document.getElementById('result-section').style.display = 'none';
+            
+            afficherQuestion();
+        }
+        
+        function afficherQuestion() {
+            if (currentQuestionIndex < questionsShuffled.length) {
+                const question = questionsShuffled[currentQuestionIndex];
+                document.getElementById('question-number').innerText = `Question ${currentQuestionIndex + 1} sur ${questionsShuffled.length}`;
+                document.getElementById('question').innerText = question.question;
+                
+                const answersContainer = document.getElementById('answers');
+                answersContainer.innerHTML = '';
+                
+                question.answers.forEach((answer, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'answer-option';
+                    div.innerHTML = `
+                        <input type="radio" id="answer-${index}" name="answer" value="${index}">
+                        <label for="answer-${index}">${answer}</label>
+                    `;
+                    div.onclick = () => selectAnswer(index);
+                    answersContainer.appendChild(div);
+                });
+                
+                selectedAnswer = null;
+                demarrerChrono();
+            }
+        }
+        
+        function selectAnswer(index) {
+            selectedAnswer = index;
+            document.getElementById('next-button').disabled = false;
+            document.getElementById(`answer-${index}`).checked = true;
+        }
+        
+        function demarrerChrono() {
+            timeLeft = 30;
+            clearInterval(timer);
+            document.getElementById('timer').innerText = timeLeft;
+            document.getElementById('timer').classList.remove('warning');
+            document.getElementById('next-button').disabled = true;
+            
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').innerText = timeLeft;
+                
+                if (timeLeft <= 10) {
+                    document.getElementById('timer').classList.add('warning');
+                }
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    questionSuivante();
+                }
+            }, 1000);
+        }
+        
+        function questionSuivante() {
+            clearInterval(timer);
+            
+            if (selectedAnswer !== null) {
+                if (selectedAnswer === questionsShuffled[currentQuestionIndex].correct) {
+                    score++;
+                }
+            }
+            
+            currentQuestionIndex++;
+            
+            if (currentQuestionIndex < questionsShuffled.length) {
+                afficherQuestion();
+            } else {
+                afficherResultats();
+            }
+        }
+        
+        function afficherResultats() {
+            document.getElementById('quiz-section').style.display = 'none';
+            document.getElementById('result-section').style.display = 'block';
+            
+            const scoreNote = (score / questionsShuffled.length) * 20;
+            document.getElementById('final-score').innerText = `${score}/20 (${scoreNote.toFixed(1)}/20)`;
+            
+            let message = '';
+            if (scoreNote >= 18) {
+                message = 'Excellent ! Vous maîtrisez parfaitement le livre ! 🎉';
+            } else if (scoreNote >= 15) {
+                message = 'Très bien ! Vous avez une très bonne compréhension du livre. 👏';
+            } else if (scoreNote >= 12) {
+                message = 'Bien ! Vous avez une bonne compréhension du livre. ✓';
+            } else if (scoreNote >= 10) {
+                message = 'Acceptable. Vous devriez relire certains passages du livre. 📚';
+            } else {
+                message = 'À relire ! Je vous conseille de relire le livre. 📖';
+            }
+            
+            document.getElementById('score-message').innerText = message;
+            
+            envoyerResultats(nom, prenom, scoreNote);
+        }
+        
+        function envoyerResultats(nom, prenom, score) {
+            const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSeTMX2uFdKiwu-o_vT0T38mWJCrfVDIrGfP7RS60YsfnHYzcQ/formResponse';
+            
+            const data = new FormData();
+            data.append('entry.1234567890', nom);
+            data.append('entry.1234567891', prenom);
+            data.append('entry.1234567892', score.toFixed(1));
+            
+            fetch(formUrl, {
+                method: 'POST',
+                body: data,
+                mode: 'no-cors'
+            }).catch(error => {
+                console.log('Résultats enregistrés (pas d\'erreur visible en no-cors)');
+            });
+        }
+        
+        function recommencer() {
+            document.getElementById('welcome-section').style.display = 'block';
+            document.getElementById('quiz-section').style.display = 'none';
+            document.getElementById('result-section').style.display = 'none';
+            document.getElementById('nom').value = '';
+            document.getElementById('prenom').value = '';
+        }
+    </script>
+</body>
+</html>
